@@ -6,23 +6,30 @@
     </head>
     <body>
         <?php
-           $position = $_GET['board'];
-           $squares = str_split($position);
-        
-           if (winner('x',$squares)) echo 'You win.';
-            else if (winner('o',$squares)) echo 'I win.';
-            else echo 'No winner yet.';
+            $squares = $_GET['board'];
+           $game = new Game($squares);
+            if ($game->winner('x'))
+                echo 'You win. Lucky guesses!';
+            else if ($game->winner('o'))
+                echo 'I win. Muahahahaha';
+            else
+                echo 'No winner yet, but you are losing.';
         ?>
     </body>
 </html>
 
 <?php       
-            function winner($token,$position) {
+        class Game {
+            var $position;
+            function __construct($squares) {
+                $this->position = str_split($squares);
+            }
+            function winner($token) {
                 $won = false;
                 for($row=0; $row<3; $row++) {
                     $won = true;
                     for($col=0; $col<3; $col++) {
-                        if ($position[3*$row+$col] != $token) { $won = false; }
+                        if ($this->position[3*$row+$col] != $token) { $won = false; }
                         //note the negative test
                     }
                     if($won == true) {
@@ -30,20 +37,21 @@
                     }
                     $won = true;
                     for($col=0; $col<3; $col++) {
-                        if ($position[3*$col+$row] != $token) { $won = false; }
+                        if ($this->position[3*$col+$row] != $token) { $won = false; }
                     } 
                     if($won == true) {
                         return $won;
                     }
                 }
-                if(($position[0] == $token) &&
-                ($position[4] == $token) &&
-                ($position[8] == $token)) {
+                if(($this->position[0] == $token) &&
+                ($this->position[4] == $token) &&
+                ($this->position[8] == $token)) {
                     $won = true;
-                } else if(($position[0] == $token) &&
-                ($position[4] == $token) &&
-                ($position[8] == $token)) {
+                } else if(($this->position[0] == $token) &&
+                ($this->position[4] == $token) &&
+                ($this->position[8] == $token)) {
                     $won = true;
                 }
                 return $won;
             }
+        }
